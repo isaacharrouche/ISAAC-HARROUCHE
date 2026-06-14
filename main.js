@@ -1,0 +1,21 @@
+(function(){'use strict';
+var html=document.documentElement;
+var toggle=document.getElementById('themeToggle');
+var saved=localStorage.getItem('theme')||'dark';
+html.setAttribute('data-theme',saved);
+toggle.addEventListener('click',function(){var next=html.getAttribute('data-theme')==='dark'?'light':'dark';html.setAttribute('data-theme',next);localStorage.setItem('theme',next);});
+var burger=document.getElementById('navBurger');
+var mobileNav=document.getElementById('navMobile');
+burger.addEventListener('click',function(){var open=mobileNav.classList.toggle('open');burger.classList.toggle('active',open);burger.setAttribute('aria-expanded',String(open));mobileNav.setAttribute('aria-hidden',String(!open));});
+mobileNav.querySelectorAll('a').forEach(function(link){link.addEventListener('click',function(){mobileNav.classList.remove('open');burger.classList.remove('active');burger.setAttribute('aria-expanded','false');mobileNav.setAttribute('aria-hidden','true');});});
+var nav=document.getElementById('nav');
+window.addEventListener('scroll',function(){nav.style.boxShadow=window.scrollY>10?'0 2px 20px rgba(0,0,0,0.35)':'';},{passive:true});
+var style=document.createElement('style');
+style.textContent='.fade-in{opacity:0;transform:translateY(26px);transition:opacity .55s ease,transform .55s ease}.fade-in.visible{opacity:1;transform:none}';
+document.head.appendChild(style);
+var targets=document.querySelectorAll('.project-card,.stat-card,.edu-card,.contact-link,.about__text,.section-title,.framework-card');
+targets.forEach(function(el){el.classList.add('fade-in');});
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.10});targets.forEach(function(el){io.observe(el);});}else{targets.forEach(function(el){el.classList.add('visible');});}
+document.querySelectorAll('.projects__grid .project-card:not(.project-card--featured)').forEach(function(card,i){card.style.transitionDelay=(i*80)+'ms';});
+document.querySelectorAll('.about__stats .stat-card').forEach(function(card,i){card.style.transitionDelay=(i*60)+'ms';});
+})();
